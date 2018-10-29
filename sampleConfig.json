@@ -1,0 +1,31 @@
+{
+    "workshopSubject":"PACE",
+    "modules": [
+    {
+        "name": "Slides",
+        "content": [
+            {
+            "name":"slide1",
+            "page":"slide1.md"
+            },
+            {
+            "name":"slide2",
+            "page":"slide2.md"
+            }
+        ]
+    },
+    {
+        "name": "Demo",
+        "content": [
+            {
+            "name":"demo1",
+            "page":"demo1.md"
+            },
+            {
+            "name":"demo2",
+            "page":"demo2.md"
+            }
+        ]
+    }
+  ]
+}
