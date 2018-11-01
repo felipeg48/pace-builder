@@ -144,7 +144,7 @@ func createPage(file string, title string) error {
 	if err != nil {
 		return fmt.Errorf("cannot create file, %s, %+v", file, err)
 	}
-	header := fmt.Sprintf("+++\ntitle = \"%s\"\nchapter = false\nweight = 3\ndescription = \"\"\ndraft = false\n+++\n", title)
+	header := fmt.Sprintf("+++\ntitle = \"\"\nmenuTitle = \"%s\"\nchapter = false\nweight = 3\ndescription = \"\"\ndraft = false\n+++\n", title)
 	_, err = f.WriteString(header)
 	if err != nil {
 		return fmt.Errorf("cannot write string %s, %+v", header, err)
