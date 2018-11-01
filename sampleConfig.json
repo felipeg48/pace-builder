@@ -1,29 +1,22 @@
 {
     "workshopSubject":"PACE",
+    "workshopHomepage":"",
     "modules": [
     {
-        "name": "Slides",
+        "type": "concepts",
         "content": [
             {
-            "name":"slide1",
-            "page":"slide1.md"
-            },
-            {
-            "name":"slide2",
-            "page":"slide2.md"
+            "name":"example-slide",
+            "filename":"example/example-slide"
             }
         ]
     },
     {
-        "name": "Demo",
+        "type": "demos",
         "content": [
             {
-            "name":"demo1",
-            "page":"demo1.md"
-            },
-            {
-            "name":"demo2",
-            "page":"demo2.md"
+            "name":"example-demo",
+            "filename":"example/example-demo"
             }
         ]
     }
