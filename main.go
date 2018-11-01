@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Pivotal-Field-Engineering/pace-builder/build"
+	"github.com/Pivotal-Field-Engineering/pace-builder/serve"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +15,16 @@ func main() {
 			build.BuildCmd()
 		},
 	}
+	var cmdServe = &cobra.Command{
+		Use:   "serve",
+		Short: "Serve the PACE Workshop http://localhost:1313",
+		Long:  `serve uses Hugo to serve the content.  By default Hugo uses http://localhost:1313`,
+		Run: func(cmd *cobra.Command, args []string) {
+			serve.ServeCmd()
+		},
+	}
 	var rootCmd = &cobra.Command{Use: "pace"}
 	rootCmd.AddCommand(cmdBuild)
+	rootCmd.AddCommand(cmdServe)
 	rootCmd.Execute()
 }
