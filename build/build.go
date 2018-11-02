@@ -81,7 +81,7 @@ func setWorkshopDemos(contents []ContentConfig) error {
 		for _, language := range languages {
 			fileName := strings.Split(content.Filename, "/")
 			pageFile := "workshopGen/content/demos/" + fileName[len(fileName)-1] + "." + language + ".md"
-			err := createPage(pageFile, fileName[len(fileName)-1])
+			err := createPage(pageFile, content.Name)
 
 			if err != nil {
 				return err
@@ -102,7 +102,7 @@ func setWorkshopConcepts(contents []ContentConfig) error {
 		for _, language := range languages {
 			fileName := strings.Split(content.Filename, "/")
 			pageFile := "workshopGen/content/concepts/" + fileName[len(fileName)-1] + "." + language + ".md"
-			err := createPage(pageFile, fileName[len(fileName)-1])
+			err := createPage(pageFile, content.Name)
 
 			if err != nil {
 				return err
