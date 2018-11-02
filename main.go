@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./build"
+	"github.com/Pivotal-Field-Engineering/pace-builder/build"
 	"github.com/spf13/cobra"
 )
 
