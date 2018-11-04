@@ -154,7 +154,40 @@ func createPage(file string, title string) error {
 
 func setWorkshopTitle(config *WorkshopConfig) error {
 	workshopTitle := fmt.Sprintf("%s Workshop", config.WorkshopSubject)
-	workshopToml := fmt.Sprintf("+++\ntitle = \"%s\"\nchapter = true\nweight = 1\n+++\n\n# %s\n	", workshopTitle, workshopTitle)
+	workshopToml := fmt.Sprintf("+++\ntitle = \"%s\"\nchapter = true\nweight = 1\n+++\n\n", workshopTitle)
+	workshopHomepageContent := workshopToml + `<div class="container" style="
+    padding-top: 3rem;
+    max-width: 80rem;
+    background-color: #058673;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    padding-bottom: 3rem;
+    width: 100%;
+">
+    <a href="/images/pa-logo.png" data-featherlight="image"><img src="/images/pa-logo.png" alt="Platform Architecture" style="height: 10rem;"></a>
+    <p style="max-width: 40rem; padding-left: 2rem;">
+        Pivotal Platform Architecture helps companies learn how to
+        solve IT
+        and engineering challenges. We encourage you to explore our
+        workshops. Build the future with Pivotal!
+    </p>
+</div>
+<br>
+<br>
+
+<p style="font-family: Novacento Sans Wide, Helvetica, Tahoma, Geneva, Arial, sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    color: #222;
+    font-weight: 200;
+	font-size: 3rem;">` + workshopTitle + `</p>
+<div style="border-top: 4px solid #F0F2F4; border-top-left-radius: 5em; border-top-right-radius: 5em; min-height: 5em;"></div>
+	
+{{< toc >}}`
 	if config.WorkshopHomepage != "" {
 		// homepageContent, err := os.Open(config.WorkshopHomepage)
 		// if err != nil {
@@ -172,7 +205,7 @@ func setWorkshopTitle(config *WorkshopConfig) error {
 
 	defer workshop.Close()
 
-	if _, err = workshop.WriteString(workshopToml); err != nil {
+	if _, err = workshop.WriteString(workshopHomepageContent); err != nil {
 		return fmt.Errorf("cannot write to workshop file")
 	}
 
@@ -183,7 +216,7 @@ func setWorkshopTitle(config *WorkshopConfig) error {
 
 	defer workshop.Close()
 
-	if _, err = workshop.WriteString(workshopToml); err != nil {
+	if _, err = workshop.WriteString(workshopHomepageContent); err != nil {
 		return fmt.Errorf("cannot write to workshop file")
 	}
 
@@ -194,7 +227,7 @@ func setWorkshopTitle(config *WorkshopConfig) error {
 
 	defer workshop.Close()
 
-	if _, err = workshop.WriteString(workshopToml); err != nil {
+	if _, err = workshop.WriteString(workshopHomepageContent); err != nil {
 		return fmt.Errorf("cannot write to workshop file")
 	}
 
@@ -205,7 +238,7 @@ func setWorkshopTitle(config *WorkshopConfig) error {
 
 	defer workshop.Close()
 
-	if _, err = workshop.WriteString(workshopToml); err != nil {
+	if _, err = workshop.WriteString(workshopHomepageContent); err != nil {
 		return fmt.Errorf("cannot write to workshop file")
 	}
 	return nil
