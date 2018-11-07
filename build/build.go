@@ -155,7 +155,17 @@ func createPage(file string, title string) error {
 func setWorkshopTitle(config *WorkshopConfig) error {
 	workshopTitle := fmt.Sprintf("%s Workshop", config.WorkshopSubject)
 	workshopToml := fmt.Sprintf("+++\ntitle = \"%s\"\nchapter = true\nweight = 1\n+++\n\n", workshopTitle)
-	workshopHomepageContent := workshopToml + `<div class="container" style="
+	workshopHomepageContent := workshopToml
+	if config.WorkshopHomepage != "" {
+		homepageContent, err := ioutil.ReadFile(config.WorkshopHomepage)
+		if err != nil {
+			fmt.Printf("%s not found!\n", config.WorkshopHomepage)
+			return err
+		}
+		workshopHomepageContent = workshopHomepageContent + string(homepageContent)
+
+	} else {
+		workshopHomepageContent = workshopHomepageContent + `<div class="container" style="
     padding-top: 3rem;
     max-width: 80rem;
     background-color: #058673;
@@ -188,14 +198,6 @@ func setWorkshopTitle(config *WorkshopConfig) error {
 <div style="border-top: 4px solid #F0F2F4; border-top-left-radius: 5em; border-top-right-radius: 5em; min-height: 5em;"></div>
 	
 {{< toc >}}`
-	if config.WorkshopHomepage != "" {
-		// homepageContent, err := os.Open(config.WorkshopHomepage)
-		// if err != nil {
-		// 	fmt.Printf("%s not found!\n", config.WorkshopHomepage)
-		// 	return err
-		// }
-		// defer homepageContent.Close()
-		fmt.Println("Homepage builder not implemented yet!")
 	}
 
 	workshop, err := os.OpenFile("workshopGen/content/workshop/_index.en.md", os.O_APPEND|os.O_WRONLY, 0600)
