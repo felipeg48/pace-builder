@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Pivotal-Field-Engineering/pace-builder/build"
+	"github.com/Pivotal-Field-Engineering/pace-builder/initialize"
 	"github.com/Pivotal-Field-Engineering/pace-builder/serve"
 	"github.com/spf13/cobra"
 )
@@ -23,8 +24,17 @@ func main() {
 			serve.ServeCmd()
 		},
 	}
+	var cmdInit = &cobra.Command{
+		Use:   "init",
+		Short: "Initialize a sample config.json, and manifest.yml.",
+		Long:  `init bootstraps a configuration for pace to build a workshop from, extend the config.json based on your needs. init also creates a basic cf manifest.yml for cf pushing`,
+		Run: func(cmd *cobra.Command, args []string) {
+			initialize.InitCmd()
+		},
+	}
 	var rootCmd = &cobra.Command{Use: "pace"}
 	rootCmd.AddCommand(cmdBuild)
 	rootCmd.AddCommand(cmdServe)
+	rootCmd.AddCommand(cmdInit)
 	rootCmd.Execute()
 }

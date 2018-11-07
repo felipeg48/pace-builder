@@ -4,3 +4,5 @@ pace-darwin
 pace-linux
 pace-windows.exe
 config.json
+.DS_Store
+manifest.yml
