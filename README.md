@@ -2,7 +2,8 @@
 
 ## Quick Start
 
-1. Download the correct `pace` CLI binary from the releases tab.
+1. Download the correct `pace` CLI binary from the releases tab. 
+  - *MAC OS Users Optional:* If you have the `brew tap pivotal/tap` installed you can install the `pace` CLI with `brew install pace-cli`
 
 1. Run `pace init`.
 
