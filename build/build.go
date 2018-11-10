@@ -1,6 +1,7 @@
 package build
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -315,16 +316,22 @@ func setWorkshopTitle(config *WorkshopConfig) error {
 }
 
 func cloneBaseRepo(repoPath string, destinationPath string) error {
+	data, err := base64.StdEncoding.DecodeString("NTA5OWU2MjE2ZjU0NjExYjNkY2UwNTc0MTk2MzVkOTg4ZDNlMmNjZgo=")
+	if err != nil {
+		return err
+	}
+
+	gitToken := strings.TrimSpace(string(data))
 
 	fmt.Println("git clone " + repoPath)
 
-	_, err := git.PlainClone(
+	_, err = git.PlainClone(
 		destinationPath,
 		false,
 		&git.CloneOptions{
 			Auth: &http.BasicAuth{
 				Username: "doesnotmatter",
-				Password: "1d0a45e22d74322b238ba44206fcbc50481757fd",
+				Password: gitToken,
 			},
 			URL:      repoPath,
 			Progress: os.Stdout,
