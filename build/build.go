@@ -8,9 +8,12 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
+	"path/filepath"
 	"strings"
 
 	git "gopkg.in/src-d/go-git.v4"
+	"gopkg.in/src-d/go-git.v4/plumbing/transport/http"
 )
 
 var languages = [...]string{"en", "es", "fr", "pt"}
@@ -72,12 +75,16 @@ func setWorkshopContent(config *WorkshopConfig) error {
 			fmt.Printf("Config contains a module (%s) that is not of type demos or concepts. This is not allowed! \n", module.Type)
 		}
 	}
-	os.RemoveAll("workshopContent/")
 	return nil
 }
 
 func setWorkshopDemos(contents []ContentConfig) error {
 	for _, content := range contents {
+		err := setWorkshopExtras(content, "demos")
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
 		for _, language := range languages {
 			fileName := strings.Split(content.Filename, "/")
 			pageFile := "workshopGen/content/demos/" + fileName[len(fileName)-1] + "." + language + ".md"
@@ -99,6 +106,10 @@ func setWorkshopDemos(contents []ContentConfig) error {
 
 func setWorkshopConcepts(contents []ContentConfig) error {
 	for _, content := range contents {
+		err := setWorkshopExtras(content, "contents")
+		if err != nil {
+			return err
+		}
 		for _, language := range languages {
 			fileName := strings.Split(content.Filename, "/")
 			pageFile := "workshopGen/content/concepts/" + fileName[len(fileName)-1] + "." + language + ".md"
@@ -115,6 +126,63 @@ func setWorkshopConcepts(contents []ContentConfig) error {
 			}
 		}
 	}
+	return nil
+}
+
+func setWorkshopExtras(curContent ContentConfig, contType string) error {
+
+	var (
+		destination string
+		source      string
+	)
+
+	contentPath := strings.Split(curContent.Filename, "/")
+	folders := contentPath[:len(contentPath)-1]
+	folderPath := strings.Join(folders, "/")
+
+	source = "workshopContent/" + folderPath + "/"
+
+	if contType == "demos" {
+		destination = "workshopGen/content/demos/" + contentPath[len(contentPath)-1] + "/"
+		_ = os.MkdirAll(destination, os.FileMode(0777))
+	} else if contType == "concepts" {
+		destination = "workshopGen/content/concepts/" + contentPath[len(contentPath)-1] + "/"
+		_ = os.MkdirAll(destination, os.FileMode(0777))
+	} else {
+		return fmt.Errorf("content is not of demos or concepts types")
+	}
+
+	fds, err := ioutil.ReadDir(source)
+	if err != nil {
+		return err
+	}
+
+	for _, fd := range fds {
+		srcfp := path.Join(source, fd.Name())
+		dstfp := path.Join(destination, fd.Name())
+
+		if !fd.IsDir() {
+			if filepath.Ext(strings.TrimSpace(fd.Name())) != ".md" {
+
+				srcfd, err := os.Open(srcfp)
+				if err != nil {
+					return err
+				}
+				defer srcfd.Close()
+
+				dstfd, err := os.Create(dstfp)
+				if err != nil {
+					return err
+				}
+				defer dstfd.Close()
+
+				if _, err = io.Copy(dstfd, srcfd); err != nil {
+					return err
+				}
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -254,6 +322,10 @@ func cloneBaseRepo(repoPath string, destinationPath string) error {
 		destinationPath,
 		false,
 		&git.CloneOptions{
+			Auth: &http.BasicAuth{
+				Username: "doesnotmatter",
+				Password: "1d0a45e22d74322b238ba44206fcbc50481757fd",
+			},
 			URL:      repoPath,
 			Progress: os.Stdout,
 		},
