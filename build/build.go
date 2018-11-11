@@ -80,7 +80,7 @@ func setWorkshopContent(config *WorkshopConfig) error {
 }
 
 func setWorkshopDemos(contents []ContentConfig) error {
-	for _, content := range contents {
+	for order, content := range contents {
 		err := setWorkshopExtras(content, "demos")
 		if err != nil {
 			fmt.Println(err)
@@ -89,7 +89,7 @@ func setWorkshopDemos(contents []ContentConfig) error {
 		for _, language := range languages {
 			fileName := strings.Split(content.Filename, "/")
 			pageFile := "workshopGen/content/demos/" + fileName[len(fileName)-1] + "." + language + ".md"
-			err := createPage(pageFile, content.Name)
+			err := createPage(pageFile, content.Name, order)
 
 			if err != nil {
 				return err
@@ -106,7 +106,7 @@ func setWorkshopDemos(contents []ContentConfig) error {
 }
 
 func setWorkshopConcepts(contents []ContentConfig) error {
-	for _, content := range contents {
+	for order, content := range contents {
 		err := setWorkshopExtras(content, "concepts")
 		if err != nil {
 			fmt.Println(err)
@@ -115,7 +115,7 @@ func setWorkshopConcepts(contents []ContentConfig) error {
 		for _, language := range languages {
 			fileName := strings.Split(content.Filename, "/")
 			pageFile := "workshopGen/content/concepts/" + fileName[len(fileName)-1] + "." + language + ".md"
-			err := createPage(pageFile, content.Name)
+			err := createPage(pageFile, content.Name, order)
 
 			if err != nil {
 				return err
@@ -209,12 +209,13 @@ func addMarkdown(existingFile string, additionalMarkDown string) error {
 	return nil
 }
 
-func createPage(file string, title string) error {
+func createPage(file string, title string, order int) error {
 	f, err := os.Create(file)
 	if err != nil {
 		return fmt.Errorf("cannot create file, %s, %+v", file, err)
 	}
-	header := fmt.Sprintf("+++\ntitle = \"\"\nmenuTitle = \"%s\"\nchapter = false\nweight = 3\ndescription = \"\"\ndraft = false\n+++\n", title)
+	order = order + 3
+	header := fmt.Sprintf("+++\ntitle = \"\"\nmenuTitle = \"%s\"\nchapter = false\nweight = %d\ndescription = \"\"\ndraft = false\n+++\n", title, order)
 	_, err = f.WriteString(header)
 	if err != nil {
 		return fmt.Errorf("cannot write string %s, %+v", header, err)
