@@ -107,8 +107,9 @@ func setWorkshopDemos(contents []ContentConfig) error {
 
 func setWorkshopConcepts(contents []ContentConfig) error {
 	for _, content := range contents {
-		err := setWorkshopExtras(content, "contents")
+		err := setWorkshopExtras(content, "concepts")
 		if err != nil {
+			fmt.Println(err)
 			return err
 		}
 		for _, language := range languages {
@@ -150,7 +151,7 @@ func setWorkshopExtras(curContent ContentConfig, contType string) error {
 		destination = "workshopGen/content/concepts/" + contentPath[len(contentPath)-1] + "/"
 		_ = os.MkdirAll(destination, os.FileMode(0777))
 	} else {
-		return fmt.Errorf("content is not of demos or concepts types")
+		return fmt.Errorf("%s content is not of demos or concepts types", contType)
 	}
 
 	fds, err := ioutil.ReadDir(source)
