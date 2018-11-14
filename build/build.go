@@ -343,7 +343,14 @@ func cloneBaseRepo(repoPath string, destinationPath string) error {
 	if err != nil {
 		return fmt.Errorf("cannot clone base git repo + %+v", err)
 	}
-
+	err = os.RemoveAll(destinationPath + "/.gitignore")
+	if err != nil {
+		fmt.Println("could not remove .gitignore file")
+	}
+	err = os.RemoveAll(destinationPath + "/.git")
+	if err != nil {
+		fmt.Println("could not remove .git directory")
+	}
 	return nil
 }
 
