@@ -14,6 +14,12 @@ import (
 
 func PushCmd() error {
 
+	if _, err := os.Stat("./public"); err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("/public directory not found! Please run `pace build` first!")
+		}
+	}
+
 	appName := sillyname.GenerateStupidName()
 	appName = strings.Replace(appName, " ", "-", -1)
 	appName = strings.ToLower(appName)
