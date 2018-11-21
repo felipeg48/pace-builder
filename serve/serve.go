@@ -3,15 +3,12 @@ package serve
 import (
 	"fmt"
 	"os"
-	"os/exec"
+	"runtime"
+
+	"github.com/gohugoio/hugo/commands"
 )
 
 func ServeCmd() {
-
-	if err := checkDependencies(); err != nil {
-		fmt.Println("Error " + err.Error())
-		return
-	}
 
 	fmt.Println("Checking workshopGen")
 	if err := os.Chdir("workshopGen/"); err != nil {
@@ -26,18 +23,16 @@ func ServeCmd() {
 	}
 }
 
-func checkDependencies() error {
-	cmd := exec.Command("/bin/sh", "-c", "command -v "+"hugo")
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("It looks like Hugo is not installed! You need to install Hugo to run a local instance of the web site...")
-	}
-	return nil
-}
-
 func serveHugo() error {
-	cmd := exec.Command("hugo", "serve")
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("Error running Hugo: %s", err)
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	resp := commands.Execute([]string{"serve"})
+
+	if resp.Err != nil {
+		if resp.IsUserError() {
+			resp.Cmd.Println("")
+			resp.Cmd.Println(resp.Cmd.UsageString())
+		}
+		os.Exit(-1)
 	}
 	return nil
 }
