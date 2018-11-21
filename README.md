@@ -13,7 +13,7 @@
 
 1. Run `pace serve`. View local running site at http://localhost:1313
 
-1. CF Push! `cf push -f manifest.yml`
+1. For pushing to CF, Run `hugo -s workshopGen/ -d ../public` & then CF Push! `cf push -f manifest.yml`
 
 ## Notes
 
