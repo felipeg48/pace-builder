@@ -83,7 +83,7 @@ func PushCmd() error {
 
 	routeRequest := cfclient.RouteRequest{
 
-		DomainGuid: resources.CFDomainGUID,
+		DomainGuid: resources.CfDomainGUID,
 		Host:       appName,
 		SpaceGuid:  resources.PaceSpaceGUID,
 	}
