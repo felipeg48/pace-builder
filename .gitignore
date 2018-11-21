@@ -6,3 +6,4 @@ pace-windows.exe
 config.json
 .DS_Store
 manifest.yml
+public/

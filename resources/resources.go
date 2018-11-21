@@ -1,5 +1,14 @@
 package resources
 
+var PaceSpaceGUID = "08dba6e1-270b-4cdc-9869-61bc44530030"
+
+var CfDomain = "cfapps.io"
+var CfDomainGUID = "fb6bd89f-2ed9-49d4-9ad1-97951a573135"
+
+var CfAPI = "https://api.run.pivotal.io"
+
+var CfUser = "pivotalpaceci@gmail.com"
+
 var DefaultConfig = `{
     "workshopSubject":"PACE",
     "workshopHomepage":"",
