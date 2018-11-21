@@ -1,9 +1,13 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/Pivotal-Field-Engineering/pace-builder/build"
 	"github.com/Pivotal-Field-Engineering/pace-builder/initialize"
+	"github.com/Pivotal-Field-Engineering/pace-builder/push"
 	"github.com/Pivotal-Field-Engineering/pace-builder/serve"
+
 	"github.com/spf13/cobra"
 )
 
@@ -32,9 +36,21 @@ func main() {
 			initialize.InitCmd()
 		},
 	}
+	var cmdPush = &cobra.Command{
+		Use:   "push",
+		Short: "Push the workshop to Pivotal Web Services.",
+		Long:  `pushes the generated workshop to Pivotal Web Services inside the PACE ORG. URL is generated for customer usage.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			err := push.PushCmd()
+			if err != nil {
+				fmt.Printf("\nError when pushing: %s", err)
+			}
+		},
+	}
 	var rootCmd = &cobra.Command{Use: "pace"}
 	rootCmd.AddCommand(cmdBuild)
 	rootCmd.AddCommand(cmdServe)
 	rootCmd.AddCommand(cmdInit)
+	rootCmd.AddCommand(cmdPush)
 	rootCmd.Execute()
 }
