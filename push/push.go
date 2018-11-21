@@ -14,9 +14,9 @@ import (
 
 func PushCmd() error {
 
-	if _, err := os.Stat("./public"); err != nil {
+	if _, err := os.Stat("./publicGen"); err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("/public directory not found! Please run `pace build` first!")
+			return fmt.Errorf("./publicGen directory not found! Please run `pace build` first!")
 		}
 	}
 
@@ -54,15 +54,17 @@ func PushCmd() error {
 		return err
 	}
 
-	err = zip.ArchiveFile("public/", "appFiles.zip", nil)
+	err = zip.ArchiveFile("publicGen/", "appFiles.zip", nil)
 	if err != nil {
 		return (err)
 	}
+	defer os.Remove("appFiles.zip")
 	appBits, err := os.Open("appFiles.zip")
 	if err != nil {
 		return err
 	}
 	defer appBits.Close()
+
 	client.UploadAppBits(appBits, app.Guid)
 
 	envVars := map[string]interface{}{
