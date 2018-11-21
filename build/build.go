@@ -11,8 +11,10 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 
+	"github.com/gohugoio/hugo/commands"
 	git "gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing/transport/http"
 )
@@ -57,6 +59,19 @@ func BuildCmd() {
 	if err := os.RemoveAll("workshopContent/"); err != nil {
 		fmt.Println("Error " + err.Error())
 		return
+	}
+
+	fmt.Println("Building Static Website Content in /publicGen ...")
+	_ = os.RemoveAll("publicGen/")
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	resp := commands.Execute([]string{"-s", "workshopGen/", "-d", "../publicGen"})
+
+	if resp.Err != nil {
+		if resp.IsUserError() {
+			resp.Cmd.Println("")
+			resp.Cmd.Println(resp.Cmd.UsageString())
+		}
+		os.Exit(-1)
 	}
 
 }
