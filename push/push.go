@@ -1,6 +1,7 @@
 package push
 
 import (
+	"bufio"
 	"encoding/base64"
 	"fmt"
 	"os"
@@ -20,16 +21,37 @@ func PushCmd() error {
 		}
 	}
 
-	appName := sillyname.GenerateStupidName()
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter Pivotal Username - This is used to enable re-pushing your workshop: ")
+	username, _ := reader.ReadString('\n')
+	username = strings.ToLower(username)
+	username = strings.Replace(username, " ", "-", -1)
+	username = strings.Replace(username, "\n", "", -1)
+	if len(username) < 3 {
+		return fmt.Errorf("That's not your username! Try again....")
+	}
+
+	config, err := resources.DetermineConfig("config.json")
+	if err != nil {
+		return err
+	}
+
+	appName := config.WorkshopHostname
+	if appName == "" {
+		appName = sillyname.GenerateStupidName()
+	}
 	appName = strings.Replace(appName, " ", "-", -1)
 	appName = strings.ToLower(appName)
+	hostname := appName
+
+	appName = fmt.Sprintf("%s-%s", username, appName)
 
 	data, err := base64.StdEncoding.DecodeString("UGl2b3RhbDEhCg==")
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("Cf pushing %s app to: https://%s.%s .....", appName, appName, resources.CfDomain)
+	fmt.Printf("Cf pushing %s app to: https://%s.%s .....", appName, hostname, resources.CfDomain)
 
 	cfPass := strings.TrimSpace(string(data))
 
@@ -86,7 +108,7 @@ func PushCmd() error {
 	routeRequest := cfclient.RouteRequest{
 
 		DomainGuid: resources.CfDomainGUID,
-		Host:       appName,
+		Host:       hostname,
 		SpaceGuid:  resources.PaceSpaceGUID,
 	}
 	route, err := client.CreateRoute(routeRequest)
