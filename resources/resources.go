@@ -7,6 +7,7 @@ import (
 )
 
 var PaceSpaceGUID = "08dba6e1-270b-4cdc-9869-61bc44530030"
+var PaceOrgGUID = "9284317b-6e22-4d94-87b4-b442b157965d"
 
 var CfDomain = "cfapps.io"
 var CfDomainGUID = "fb6bd89f-2ed9-49d4-9ad1-97951a573135"

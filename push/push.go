@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/base64"
 	"fmt"
+	"net/url"
 	"os"
 	"strings"
 
@@ -71,8 +72,22 @@ func PushCmd() error {
 		Instances: 1,
 		Buildpack: "staticfile_buildpack",
 	}
-	app, err := client.CreateApp(appRequest)
-	if err != nil {
+	app := cfclient.App{}
+	app, err = client.CreateApp(appRequest)
+	if strings.Contains(err.Error(), "The app name is taken:") {
+		app, err = client.AppByName(appName, resources.PaceSpaceGUID, resources.PaceOrgGUID)
+		if err != nil {
+			return err
+		}
+		err = client.DeleteApp(app.Guid)
+		if err != nil {
+			return err
+		}
+		app, err = client.CreateApp(appRequest)
+		if err != nil {
+			return err
+		}
+	} else if err != nil {
 		return err
 	}
 
@@ -111,8 +126,19 @@ func PushCmd() error {
 		Host:       hostname,
 		SpaceGuid:  resources.PaceSpaceGUID,
 	}
-	route, err := client.CreateRoute(routeRequest)
-	if err != nil {
+
+	route := cfclient.Route{}
+	route, err = client.CreateRoute(routeRequest)
+	if strings.Contains(err.Error(), "The host is taken:") {
+		routes, err := client.ListRoutesByQuery(url.Values{"q": []string{"host:" + hostname}})
+		if err != nil {
+			return err
+		}
+		if len(routes) > 1 {
+			return fmt.Errorf("Multiple hostnames returned")
+		}
+		route = routes[0]
+	} else if err != nil {
 		return err
 	}
 
