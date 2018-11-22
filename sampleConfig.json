@@ -1,6 +1,7 @@
 {
     "workshopSubject":"PACE",
     "workshopHomepage":"",
+    "workshopHostname":"",
     "modules": [
     {
         "type": "concepts",

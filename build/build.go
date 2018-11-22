@@ -2,7 +2,6 @@ package build
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -14,6 +13,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/Pivotal-Field-Engineering/pace-builder/resources"
 	"github.com/gohugoio/hugo/commands"
 	git "gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing/transport/http"
@@ -28,7 +28,7 @@ func BuildCmd() {
 		return
 	}
 
-	config, err := determineConfig("config.json")
+	config, err := resources.DetermineConfig("config.json")
 	if err != nil {
 		fmt.Println("Error " + err.Error())
 		return
@@ -76,7 +76,7 @@ func BuildCmd() {
 
 }
 
-func setWorkshopContent(config *WorkshopConfig) error {
+func setWorkshopContent(config *resources.WorkshopConfig) error {
 
 	if err := cloneBaseRepo("https://github.com/Pivotal-Field-Engineering/pace-workshop-content", "workshopContent"); err != nil {
 		return err
@@ -94,7 +94,7 @@ func setWorkshopContent(config *WorkshopConfig) error {
 	return nil
 }
 
-func setWorkshopDemos(contents []ContentConfig) error {
+func setWorkshopDemos(contents []resources.ContentConfig) error {
 	for order, content := range contents {
 		err := setWorkshopExtras(content, "demos")
 		if err != nil {
@@ -120,7 +120,7 @@ func setWorkshopDemos(contents []ContentConfig) error {
 	return nil
 }
 
-func setWorkshopConcepts(contents []ContentConfig) error {
+func setWorkshopConcepts(contents []resources.ContentConfig) error {
 	for order, content := range contents {
 		err := setWorkshopExtras(content, "concepts")
 		if err != nil {
@@ -146,7 +146,7 @@ func setWorkshopConcepts(contents []ContentConfig) error {
 	return nil
 }
 
-func setWorkshopExtras(curContent ContentConfig, contType string) error {
+func setWorkshopExtras(curContent resources.ContentConfig, contType string) error {
 
 	var (
 		destination string
@@ -238,7 +238,7 @@ func createPage(file string, title string, order int) error {
 	return nil
 }
 
-func setWorkshopTitle(config *WorkshopConfig) error {
+func setWorkshopTitle(config *resources.WorkshopConfig) error {
 	workshopTitle := fmt.Sprintf("%s Workshop", config.WorkshopSubject)
 	workshopToml := fmt.Sprintf("+++\ntitle = \"%s\"\nchapter = true\nweight = 1\n+++\n\n", workshopTitle)
 	workshopHomepageContent := workshopToml
@@ -375,28 +375,4 @@ func checkDependencies() error {
 		fmt.Println("It looks like Hugo is not installed! You need to install Hugo to run a local instance of the web site...")
 	}
 	return nil
-}
-
-func determineConfig(path string) (*WorkshopConfig, error) {
-	configFile, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("config not found")
-	}
-	var config WorkshopConfig
-	err = json.Unmarshal(configFile, &config)
-	return &config, nil
-}
-
-type WorkshopConfig struct {
-	WorkshopHomepage string `json:"workshopHomepage"`
-	WorkshopSubject  string `json:"workshopSubject"`
-	Modules          []struct {
-		Type    string          `json:"type"`
-		Content []ContentConfig `json:"content"`
-	} `json:"modules"`
-}
-
-type ContentConfig struct {
-	Name     string `json:"name"`
-	Filename string `json:"filename"`
 }
