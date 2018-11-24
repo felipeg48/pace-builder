@@ -74,21 +74,23 @@ func PushCmd() error {
 	}
 	app := cfclient.App{}
 	app, err = client.CreateApp(appRequest)
-	if strings.Contains(err.Error(), "The app name is taken:") {
-		app, err = client.AppByName(appName, resources.PaceSpaceGUID, resources.PaceOrgGUID)
-		if err != nil {
+	if err != nil {
+		if strings.Contains(err.Error(), "The app name is taken:") {
+			app, err = client.AppByName(appName, resources.PaceSpaceGUID, resources.PaceOrgGUID)
+			if err != nil {
+				return err
+			}
+			err = client.DeleteApp(app.Guid)
+			if err != nil {
+				return err
+			}
+			app, err = client.CreateApp(appRequest)
+			if err != nil {
+				return err
+			}
+		} else {
 			return err
 		}
-		err = client.DeleteApp(app.Guid)
-		if err != nil {
-			return err
-		}
-		app, err = client.CreateApp(appRequest)
-		if err != nil {
-			return err
-		}
-	} else if err != nil {
-		return err
 	}
 
 	err = zip.ArchiveFile("publicGen/", "appFiles.zip", nil)
@@ -129,17 +131,19 @@ func PushCmd() error {
 
 	route := cfclient.Route{}
 	route, err = client.CreateRoute(routeRequest)
-	if strings.Contains(err.Error(), "The host is taken:") {
-		routes, err := client.ListRoutesByQuery(url.Values{"q": []string{"host:" + hostname}})
-		if err != nil {
+	if err != nil {
+		if strings.Contains(err.Error(), "The host is taken:") {
+			routes, err := client.ListRoutesByQuery(url.Values{"q": []string{"host:" + hostname}})
+			if err != nil {
+				return err
+			}
+			if len(routes) > 1 {
+				return fmt.Errorf("Multiple hostnames returned")
+			}
+			route = routes[0]
+		} else {
 			return err
 		}
-		if len(routes) > 1 {
-			return fmt.Errorf("Multiple hostnames returned")
-		}
-		route = routes[0]
-	} else if err != nil {
-		return err
 	}
 
 	routeMappingRequest := cfclient.RouteMappingRequest{
