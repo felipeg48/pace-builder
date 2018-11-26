@@ -1,5 +1,7 @@
 # PACE Workshop Builder
 
+<script id="asciicast-213808" src="https://asciinema.org/a/213808.js" async></script>
+
 ## Quick Start
 
 1. Download the correct `pace` CLI binary from the releases tab. 
