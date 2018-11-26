@@ -1,6 +1,6 @@
 # PACE Workshop Builder
 
-<script id="asciicast-213808" src="https://asciinema.org/a/213808.js" async></script>
+[![asciicast](https://asciinema.org/a/213808.svg)](https://asciinema.org/a/213808?autoplay=1)
 
 ## Quick Start
 
