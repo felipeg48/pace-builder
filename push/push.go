@@ -11,6 +11,7 @@ import (
 	"github.com/Pallinder/sillyname-go"
 	"github.com/Pivotal-Field-Engineering/pace-builder/resources"
 	"github.com/cloudfoundry-community/go-cfclient"
+	"github.com/foomo/htpasswd"
 	"github.com/pierrre/archivefile/zip"
 )
 
@@ -31,6 +32,18 @@ func PushCmd() error {
 	if len(username) < 3 {
 		return fmt.Errorf("That's not your username! Try again....")
 	}
+
+	fmt.Print("Enter Workshop Website Password - [pivotal]: ")
+	sitePass, _ := reader.ReadString('\n')
+	sitePass = strings.Replace(sitePass, "\n", "", -1)
+	if len(sitePass) < 1 {
+		fmt.Println("Password defaulting to \"pivotal\"")
+		sitePass = "pivotal"
+	}
+
+	authFile := "publicGen/Staticfile.auth"
+
+	err := htpasswd.SetPassword(authFile, resources.WorkshopUser, sitePass, htpasswd.HashSHA)
 
 	config, err := resources.DetermineConfig("config.json")
 	if err != nil {
