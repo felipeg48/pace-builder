@@ -170,6 +170,6 @@ func PushCmd() error {
 	}
 
 	fmt.Println("SUCCEEDED!")
-
+	fmt.Printf("Access the workshop at:\n https://%s.%s\n Username: %s\n Password: %s", hostname, resources.CfDomain, resources.WorkshopUser, sitePass)
 	return nil
 }
