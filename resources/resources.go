@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 )
 
+var WorkshopUser = "pivotal"
 var PaceSpaceGUID = "08dba6e1-270b-4cdc-9869-61bc44530030"
 var PaceOrgGUID = "9284317b-6e22-4d94-87b4-b442b157965d"
 
