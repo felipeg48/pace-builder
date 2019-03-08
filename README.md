@@ -24,3 +24,38 @@
 1. While `pace` will build a generic homepage for your workshop you can setup a custom one by supplying a markdown file via the `workshopHomepage` field in the `config.json` file. This is not required.
 
 1. `pace push` will automatically generate a random hostname for your workshop but you can specifiy a custom one with the use of the `workshopHostname` attribute inside your `config.json`.
+
+## Build/Install pace-builder manually
+1. Download and install [go](https://golang.org/dl/)
+
+1. Make sure you have something like this in your terminal profile
+
+```
+    export GOPATH=~/go
+    export GOBIN=$GOPATH/bin
+```
+
+1. Open a terminal window to `pace-builder` directory
+
+1. Install all dependencies by running: 
+
+```
+    go get ./...
+```
+
+1. Build binary by running:
+
+```
+    go install
+```
+
+1. You should have an executable binary in `$GOBIN/pace-builder`. 
+
+1. [OPTIONAL] Rename `pace-builder` to `pace`:
+```
+    mv $GOBIN/pace-builder $GOBIN/pace
+```
+1. Test your new pace install with:
+```
+    pace -h
+```
